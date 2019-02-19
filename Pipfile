@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 django = "==2.1.7"
 django-rest-swagger = "*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.7"
