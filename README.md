@@ -2,6 +2,6 @@
 
 # Run virtual env:
 * Run `pipenv install` in the folder with the `Pipfile` file 
-### OR
+### Then
 * Run `pipenv lock` in the folder with the `Pipfile.lock` file  
 
