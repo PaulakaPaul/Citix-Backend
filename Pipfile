@@ -9,6 +9,8 @@ verify_ssl = true
 django = "==2.1.7"
 django-rest-swagger = "*"
 djangorestframework = "*"
+marshmallow = "==3.0.0b12"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"
