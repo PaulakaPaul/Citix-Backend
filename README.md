@@ -5,3 +5,7 @@
 ### OR
 * Run `pipenv lock` in the folder with the `Pipfile.lock` file  
 
+
+# Env vars:
+* support throw `/main/.env` file
+
