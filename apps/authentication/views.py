@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
 
-# Create your views here.
+from apps.authentication.serializers import EmailSignUpSerializer
+
+
+class EmailSignupView(CreateAPIView):
+    serializer_class = EmailSignUpSerializer
