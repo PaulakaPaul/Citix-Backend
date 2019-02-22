@@ -1,12 +1,23 @@
-from rest_framework import status
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
-class EmailExistsError(APIException):
+class FieldError(ValidationError):
+    message = ValidationError.default_detail
+    code = ValidationError.default_code
+
+    def __init__(self, field=None):
+        if field is None:
+            detail = [self.message]
+        else:
+            detail = {field: [self.message]}
+
+        super().__init__(detail, code=self.code)
+
+
+class EmailExistsError(FieldError):
     message = _('Email already exists.')
     code = 'email_already_exists'
-    status_code = status.HTTP_400_BAD_REQUEST
 
     def __init__(self):
-        super().__init__(self.message, self.code)
+        super().__init__('email')
