@@ -7,10 +7,12 @@ verify_ssl = true
 
 [packages]
 django = "==2.1.7"
-django-rest-swagger = "*"
-djangorestframework = "*"
+django-rest-swagger = "==2.2.0"
+djangorestframework = "==3.8.2"
 marshmallow = "==3.0.0b12"
-python-dotenv = "*"
+python-dotenv = "==0.9.1"
+pyrebase = "==3.0.27"
+requests = "==2.11.1"
 
 [requires]
 python_version = "3.7"
