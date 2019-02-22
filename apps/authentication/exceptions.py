@@ -21,3 +21,11 @@ class EmailExistsError(FieldError):
 
     def __init__(self):
         super().__init__('email')
+
+
+class WrongEmailOrPasswordError(FieldError):
+    message = _('Wrong email or password')
+    code = 'wrong_email_or_password'
+
+    def __init__(self):
+        super().__init__('credentials')

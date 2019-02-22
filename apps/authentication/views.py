@@ -1,7 +1,11 @@
 from rest_framework.generics import CreateAPIView
 
-from apps.authentication.serializers import EmailSignUpSerializer
+import apps.authentication.serializers as serializers
 
 
 class EmailSignupView(CreateAPIView):
-    serializer_class = EmailSignUpSerializer
+    serializer_class = serializers.EmailSignUpSerializer
+
+
+class EmailLoginView(CreateAPIView):
+    serializer_class = serializers.EmailLoginSerializer

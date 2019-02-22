@@ -1,28 +1,20 @@
-import logging
-
-from requests import HTTPError
-from rest_framework import fields
-from rest_framework.serializers import Serializer
-
-from apps.authentication.clouds import get_auth_cloud_client
-from apps.authentication.exceptions import EmailExistsError
-
-logger = logging.getLogger(__name__)
+from apps.authentication.clouds import BaseAuthSerializer
+import apps.authentication.exceptions as exceptions
 
 
-class EmailSignUpSerializer(Serializer):
-    email = fields.EmailField(required=True)
-    password = fields.CharField(required=True)
+class EmailSignUpSerializer(BaseAuthSerializer):
+    auth_cloud_client_handler = 'create_user_with_email_and_password'
+    auth_fail_error_class = exceptions.EmailExistsError
 
-    def create(self, validated_data):
-        email = validated_data['email']
-        password = validated_data['password']
-
-        try:
-            auth_cloud_client = get_auth_cloud_client()
-            auth_cloud_client.create_user_with_email_and_password(email, password)
-        except HTTPError as err:
-            logger.error(err)
-            raise EmailExistsError()
-
+    def create_or_get_django_user_from_cloud_user(self, user):
         # TODO: Create django user.
+        return user
+
+
+class EmailLoginSerializer(BaseAuthSerializer):
+    auth_cloud_client_handler = 'sign_in_with_email_and_password'
+    auth_fail_error_class = exceptions.WrongEmailOrPasswordError
+
+    def create_or_get_django_user_from_cloud_user(self, user):
+        # TODO: Get django user.
+        return user
