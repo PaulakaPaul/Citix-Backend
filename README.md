@@ -9,3 +9,6 @@
 # Env vars:
 * support throw `/main/.env` file
 
+
+# Run tests:
+* Run `python3 maange.py test`
