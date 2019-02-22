@@ -5,7 +5,6 @@ from rest_framework import fields
 from rest_framework.serializers import Serializer
 
 from apps.authentication.clouds.firebase import FirebaseAuthClient
-from apps.authentication.exceptions import EmailExistsError
 
 logger = logging.getLogger(__name__)
 
