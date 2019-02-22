@@ -24,3 +24,5 @@ class EmailSignUpSerializer(Serializer):
         except HTTPError as err:
             logger.error(err)
             raise EmailExistsError()
+
+        # TODO: Create django user.
