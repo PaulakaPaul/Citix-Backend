@@ -52,7 +52,7 @@ class BaseAuthSerializer(Serializer):
         token = self.create_and_get_cloud_token(cloud_user, user)
         self._test_if_valid_token(token)
 
-        return type("SignUser", (), {'email': email, 'token': token.key})
+        return {'email': email, 'token': token.key}
 
     def _test_if_valid_model(self, user):
         user_model = apps.get_model(*settings.AUTH_USER_MODEL.split('.', 1))
