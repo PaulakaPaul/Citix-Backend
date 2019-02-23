@@ -84,6 +84,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'main.urls'
+AUTH_USER_MODEL = 'authentication.User'
 
 TEMPLATES = [
     {
@@ -140,6 +141,20 @@ if ENV_VARS['ENABLE_FIREBASE']:
     FIREBASE_AUTH_DOMAIN = ENV_VARS['FIREBASE_AUTH_DOMAIN']
     FIREBASE_DATABASE_URL = ENV_VARS['FIREBASE_DATABASE_URL']
     FIREBASE_STORAGE_BUCKET = ENV_VARS['FIREBASE_STORAGE_BUCKET']
+
+
+# Rest config
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'apps.authentication.backends.CloudTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%SZ'
+}
 
 
 # Internationalization

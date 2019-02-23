@@ -3,6 +3,7 @@ from apps.authentication.clouds import BaseAuthSerializer
 from apps.authentication.models import User
 import apps.authentication.exceptions as exceptions
 
+
 class EmailSignUpSerializer(BaseAuthSerializer):
     auth_cloud_client_handler = 'create_user_with_email_and_password'
     auth_fail_error_class = exceptions.EmailExistsError
@@ -22,11 +23,10 @@ class EmailLoginSerializer(BaseAuthSerializer):
 
 
 class UserSerializer(serializers.Serializer):
-    first_name = serializers.CharField(max_length= 30)
-    last_name = serializers.CharField(max_length= 30)
-    phone = serializers.IntegerField()
+    first_name = serializers.CharField(max_length=30)
+    last_name = serializers.CharField(max_length=150)
+    phone = serializers.CharField(max_length=255)
     email = serializers.EmailField()
-
 
     def save(self, validated_data):
         return User(self.first_name, self.last_name, self.email, self.phone).save()
@@ -43,4 +43,3 @@ class UserSerializer(serializers.Serializer):
 
     def delete(self):
         super().delete(self)
-
