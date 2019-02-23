@@ -14,8 +14,8 @@ urlpatterns = [
 
     url(r'^', include(router_user.urls)),
 
-    url(r'^', include(router_user.urls)),
+  #  url(r'^', include(router_user.urls)),
 
-    url(r'^', include(router_user.urls)),
+  #  url(r'^', include(router_user.urls)),
 
 ]
