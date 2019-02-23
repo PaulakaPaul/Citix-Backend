@@ -1,10 +1,9 @@
 from django.conf.urls import url
-from rest_framework.routers import DefaultRouter
 from apps.authentication import views
 
-
-routerUser = DefaultRouter();
-routerUser.register(r'users', views.UserViewSet, 'user');
-
 urlpatterns = [
+    url(r'^auth/email/signup/$', views.EmailSignupView.as_view(), name='email-signup'),
+    url(r'^auth/email/login/$', views.EmailLoginView.as_view(), name='email-login'),
+
+    url(r'user/$', views.UserView.as_view(), name='user'),
 ]

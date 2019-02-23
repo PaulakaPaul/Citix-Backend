@@ -1,4 +1,17 @@
-from rest_auth import views as rest_auth_views
-from apps.authentication import serializers,models
 
-# Create your views here.
+from rest_framework.generics import CreateAPIView
+
+import apps.authentication.serializers as serializers
+
+
+class EmailSignupView(CreateAPIView):
+    serializer_class = serializers.EmailSignUpSerializer
+
+
+class EmailLoginView(CreateAPIView):
+    serializer_class = serializers.EmailLoginSerializer
+
+
+class UserView(CreateAPIView):
+    serializer_class = serializers.UserSerializer
+
