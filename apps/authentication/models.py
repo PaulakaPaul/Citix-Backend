@@ -14,6 +14,7 @@ class CloudGeneratedToken(Token):
 
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
+    phone = models.CharField(_('phone_number'), max_length=255, blank=True, null=True)
 
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(
@@ -27,3 +28,6 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
