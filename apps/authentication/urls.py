@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^auth/email/login/$', views.EmailLoginView.as_view(), name='email-login'),
 
     url(r'user/$', views.UserView.as_view(), name='user'),
+
 ]

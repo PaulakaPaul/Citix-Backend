@@ -11,7 +11,7 @@ class UserManager(DefaultUserManager):
 
 
 class User(AbstractUser):
-    phone = models.IntegerField(_('phone number'), blank=True)
+    phone = models.IntegerField('phone number', blank=True)
 
     PHONE_FIELD = 'phone'
 
