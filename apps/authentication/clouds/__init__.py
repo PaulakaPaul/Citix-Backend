@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.db import IntegrityError
 from requests import HTTPError
 from rest_framework import fields
 from rest_framework.serializers import Serializer
@@ -50,7 +49,7 @@ class BaseAuthSerializer(Serializer):
         user = self.create_or_get_django_user_from_cloud_user(cloud_user)
         self._test_if_valid_model(user)
 
-        token = self.get_and_persist_cloud_token(cloud_user, user)
+        token = self.create_and_get_cloud_token(cloud_user, user)
         self._test_if_valid_token(token)
 
         return type("SignUser", (), {'email': email, 'token': token.key})
@@ -64,7 +63,7 @@ class BaseAuthSerializer(Serializer):
         assert isinstance(token, CloudGeneratedToken)
         assert token is not None
 
-    def get_and_persist_cloud_token(self, cloud_user, django_user):
+    def create_and_get_cloud_token(self, cloud_user, django_user):
         # TODO: Add refresh token login (token expires in 1 hour)
         raise NotImplementedError()
 

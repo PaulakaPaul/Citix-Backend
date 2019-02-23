@@ -13,7 +13,7 @@ class EmailSignUpSerializer(BaseAuthSerializer):
 
         return new_django_user
 
-    def get_and_persist_cloud_token(self, cloud_user, django_user):
+    def create_and_get_cloud_token(self, cloud_user, django_user):
         token = cloud_user['idToken']
         refresh_token = cloud_user['refreshToken']
 
@@ -29,7 +29,7 @@ class EmailLoginSerializer(BaseAuthSerializer):
 
         return persisted_django_user
 
-    def get_and_persist_cloud_token(self, cloud_user, django_user):
+    def create_and_get_cloud_token(self, cloud_user, django_user):
         token = cloud_user['idToken']
         refresh_token = cloud_user['refreshToken']
 
