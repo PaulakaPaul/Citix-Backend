@@ -1,5 +1,6 @@
 import logging
 
+from apps.authentication.models import User
 from requests import HTTPError
 from rest_framework import fields
 from rest_framework.serializers import Serializer
@@ -46,3 +47,7 @@ class BaseAuthSerializer(Serializer):
 
     def create_or_get_django_user_from_cloud_user(self, user):
         raise NotImplementedError()
+
+
+
+
