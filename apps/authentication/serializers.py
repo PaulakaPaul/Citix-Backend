@@ -39,4 +39,3 @@ class UserSerializer(serializers.Serializer):
         instance.email = validated_data.get('email', instance.email)
         return User(instance.first_name, instance.last_name, instance.email, instance.phone).save()
 
-    def delete(self):
