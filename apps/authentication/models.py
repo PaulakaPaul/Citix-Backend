@@ -35,8 +35,3 @@ class User(AbstractUser):
                                              self.first_name, self.last_name,
                                              self.phone)
 
-    def delete(self, using=None, keep_parents=False):
-        super().delete()
-
-    def get(self):
-        super().get
