@@ -1,10 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from apps.authentication.user import _constants
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 
-from apps.authentication.user import AbstractUserAddress, AbstractUserRating
+username_validator = UnicodeUsernameValidator()
+SIZE = _constants.QUERY_STRINGS_LENGTH_ADDR
+
 
 class CloudGeneratedToken(Token):
 
@@ -17,7 +20,6 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     phone = models.CharField(_('phone_number'), max_length=255, blank=True, null=True)
 
-    username_validator = UnicodeUsernameValidator()
     username = models.CharField(
         _('username'),
         max_length=150,
@@ -34,13 +36,28 @@ class User(AbstractUser):
         return self.email
 
 
-class UserAdress(AbstractUserAddress):
+class UserAddress(models.Model):
+    country = models.CharField(_('country name'), max_length=SIZE, blank=False, validators=[username_validator])
+    city = models.CharField(_('city name'), max_length=SIZE, blank=False, validators=[username_validator])
+    neighbourhood = models.CharField(_('neighbourhood name'), max_length=SIZE, blank=False, validators=[username_validator])
+    street = models.CharField(_('street address'), max_length=SIZE, blank=True)
+    number = models.CharField(_('number address'), max_length=SIZE, blank=True)
+    userId = models.OneToOneField(User, on_delete=True, primary_key=True)
 
-    def __init__(self, country, city, neightbourhood, street, number, user_id):
-        super().__init__(country, city, neightbourhood, street, number, user_id)
+    def get_full_address(self):
+        full_name = '%s %s %s %s ' % (self.country, self.city, self.neighbourhood, self.street)
+        return full_name.strip()
+
+    def get_city(self):
+        return self.city
+
+    def get_id(self):
+        return self.userId
 
 
-class UserRating(AbstractUserRating):
+class UserRating(models.Model):
+    starRating = models.IntegerField(_('star_rating'), blank=False)
+    userId = models.OneToOneField(User, on_delete=True, primary_key=True)
 
-    def __init__(self, user_rating, user_id):
-        super().__init__(user_rating, user_id)
+    def get_rating(self):
+        return self.starRating
