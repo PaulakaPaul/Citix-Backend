@@ -2,7 +2,7 @@ from rest_framework import mixins
 from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import GenericViewSet
 import apps.authentication.serializers as serializers
-from apps.authentication.models import User
+from apps.authentication.models import *
 
 
 class EmailSignupView(CreateAPIView):
@@ -14,43 +14,20 @@ class EmailLoginView(CreateAPIView):
 
 
 class UserViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.BaseUserSerializer
     queryset = User.objects.all()
-    search_fields = ('first_name', 'last_name', 'phone', 'email')
-
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
 
 class UserAddressView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     serializer_class = serializers.UserAddressSerializer
-    queryset = User.objects.all()
-
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+    queryset = UserAddress.objects.all()
 
 
 class UserRatingView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     serializer_class = serializers.UserRatingSerializer
-    queryset = User.objects.all()
+    queryset = UserRating.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
 
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+class UserEventView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
+    serializer_class = serializers.UserEventSerializer
+    queryset = BaseUserEvent.objects.all()

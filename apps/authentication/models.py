@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from apps.authentication.user import _constants
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
@@ -42,7 +43,7 @@ class UserAddress(models.Model):
     neighbourhood = models.CharField(_('neighbourhood name'), max_length=SIZE, blank=False, validators=[username_validator])
     street = models.CharField(_('street address'), max_length=SIZE, blank=True)
     number = models.CharField(_('number address'), max_length=SIZE, blank=True)
-    userId = models.OneToOneField(User, on_delete=True, primary_key=True)
+    user = models.ForeignKey(User, on_delete=True)
 
     def get_full_address(self):
         full_name = '%s %s %s %s ' % (self.country, self.city, self.neighbourhood, self.street)
@@ -51,13 +52,32 @@ class UserAddress(models.Model):
     def get_city(self):
         return self.city
 
-    def get_id(self):
-        return self.userId
+    def get_user(self):
+        return self.user
 
 
 class UserRating(models.Model):
     starRating = models.IntegerField(_('star_rating'), blank=False)
-    userId = models.OneToOneField(User, on_delete=True, primary_key=True)
+    user = models.ForeignKey(User, on_delete=True)
 
     def get_rating(self):
         return self.starRating
+
+
+class Location(models.Model):
+    x = models.IntegerField()
+    y = models.IntegerField()
+
+
+class Event(models.Model):
+    name = models.CharField(_('name'), max_length=SIZE, blank=False, validators=[username_validator])
+    description = models.CharField(_('description'), max_length=SIZE*10, blank=False, validators=[username_validator])
+    location = models.ForeignKey(Location, on_delete=True)
+    photo_urls = ArrayField(ArrayField(models.CharField(max_length=SIZE*100)))
+
+
+class BaseUserEvent(models.Model):
+    event = models.ForeignKey(Event, on_delete=True)
+    user = models.ForeignKey(User, on_delete=True)
+
+
