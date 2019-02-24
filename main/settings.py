@@ -25,6 +25,12 @@ class EnvVarsValidator(Schema):
     FIREBASE_DATABASE_URL = fields.String(missing=None)
     FIREBASE_STORAGE_BUCKET = fields.String(missing=None)
 
+    DATABASE_HOST = fields.String(missing='127.0.0.1')
+    DATABASE_PORT = fields.String(missing='5432')
+    DATABASE_USER = fields.String(missing='postgres')
+    DATABASE_PASSWORD = fields.String(missing='some-pass')
+    DATABASE_NAME = fields.String(missing='citix')
+
     @validates_schema
     def validate_data(self, data):
         missing_fields = []
@@ -110,8 +116,12 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': ENV_VARS['DATABASE_NAME'],
+        'USER': ENV_VARS['DATABASE_USER'],
+        'PASSWORD': ENV_VARS['DATABASE_PASSWORD'],
+        'HOST': ENV_VARS['DATABASE_HOST'],
+        'PORT': ENV_VARS['DATABASE_PORT']
     }
 }
 
