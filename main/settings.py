@@ -170,9 +170,12 @@ REST_FRAMEWORK = {
         'apps.authentication.backends.CloudTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    'EXCEPTION_HANDLER': 'apps.common.handlers.code_and_message_exception_handler',
+    'DEFAULT_PAGINATION_CLASS': 'apps.common.pagination.DefaultPagination',
     'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%SZ'
 }
 
+DEFAULT_PAGE_SIZE = 25
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
