@@ -74,7 +74,8 @@ CONTRIB_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'apps.authentication'
+    'apps.authentication',
+    'apps.events'
 ]
 
 INSTALLED_APPS = CORE_APPS + CONTRIB_APPS + CUSTOM_APPS

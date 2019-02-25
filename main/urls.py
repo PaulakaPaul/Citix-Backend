@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^$', RedirectView.as_view(pattern_name='docs')),
     url(r'^api/docs/$', get_swagger_view(title='Citix Server API'), name='docs'),
     url(r'^api/', include(('apps.authentication.urls', 'authentication'), namespace='authentication')),
+    url(r'^api/', include(('apps.events.urls', 'events'), namespace='events')),
     url(r'^admin/', admin.site.urls),
 ]
