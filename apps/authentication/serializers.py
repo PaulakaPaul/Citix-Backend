@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.authentication.clouds import BaseAuthSerializer
-from apps.authentication.models import User
+from apps.authentication.models import User, CloudGeneratedToken
 import apps.authentication.exceptions as exceptions
 
 
@@ -9,8 +9,15 @@ class EmailSignUpSerializer(BaseAuthSerializer):
     auth_fail_error_class = exceptions.EmailExistsError
 
     def create_or_get_django_user_from_cloud_user(self, user):
-        # TODO: Create django user.
-        return user
+        new_django_user = User.objects.create(email=user['email'])
+
+        return new_django_user
+
+    def create_and_get_cloud_token(self, cloud_user, django_user):
+        token = cloud_user['idToken']
+        refresh_token = cloud_user['refreshToken']
+
+        return CloudGeneratedToken.objects.create(key=token, refresh_key=refresh_token, user=django_user)
 
 
 class EmailLoginSerializer(BaseAuthSerializer):
@@ -18,8 +25,22 @@ class EmailLoginSerializer(BaseAuthSerializer):
     auth_fail_error_class = exceptions.WrongEmailOrPasswordError
 
     def create_or_get_django_user_from_cloud_user(self, user):
-        # TODO: Get django user.
-        return user
+        persisted_django_user = User.objects.get(email=user['email'])
+
+        return persisted_django_user
+
+    def create_and_get_cloud_token(self, cloud_user, django_user):
+        token = cloud_user['idToken']
+        refresh_token = cloud_user['refreshToken']
+
+        try:
+            # Because the key is primary key the token cannot be updated.
+            cloud_token = CloudGeneratedToken.objects.get(user=django_user)
+            cloud_token.delete()
+        except CloudGeneratedToken.DoesNotExist:
+            pass
+
+        return CloudGeneratedToken.objects.create(key=token, refresh_key=refresh_token, user=django_user)
 
 
 class UserSerializer(serializers.Serializer):

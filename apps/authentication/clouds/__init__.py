@@ -1,10 +1,13 @@
 import logging
 
+from django.conf import settings
 from requests import HTTPError
 from rest_framework import fields
 from rest_framework.serializers import Serializer
+from django.apps import apps
 
 from apps.authentication.clouds.firebase import FirebaseAuthClient
+from apps.authentication.models import CloudGeneratedToken
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +23,9 @@ class BaseAuthSerializer(Serializer):
     auth_fail_error_class = None
 
     email = fields.EmailField(required=True)
-    password = fields.CharField(required=True)
+    password = fields.CharField(required=True, write_only=True)
+
+    token = fields.CharField(read_only=True)
 
     def create(self, validated_data):
         assert self.auth_cloud_client_handler is not None
@@ -39,10 +44,28 @@ class BaseAuthSerializer(Serializer):
 
             raise self.auth_fail_error_class()
 
-        user = self.create_or_get_django_user_from_cloud_user(user)
+        cloud_user = user
 
-        # TODO: Return user after it's model it's added.
-        return type("User", (), {"email": email, "password": password, "user": user})
+        user = self.create_or_get_django_user_from_cloud_user(cloud_user)
+        self._test_if_valid_model(user)
+
+        token = self.create_and_get_cloud_token(cloud_user, user)
+        self._test_if_valid_token(token)
+
+        return {'email': email, 'token': token.key}
+
+    def _test_if_valid_model(self, user):
+        user_model = apps.get_model(*settings.AUTH_USER_MODEL.split('.', 1))
+        assert isinstance(user, user_model)
+        assert user_model is not None
+
+    def _test_if_valid_token(self, token):
+        assert isinstance(token, CloudGeneratedToken)
+        assert token is not None
+
+    def create_and_get_cloud_token(self, cloud_user, django_user):
+        # TODO: Add refresh token login (token expires in 1 hour)
+        raise NotImplementedError()
 
     def create_or_get_django_user_from_cloud_user(self, user):
         raise NotImplementedError()
