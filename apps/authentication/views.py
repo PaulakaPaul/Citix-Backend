@@ -8,10 +8,12 @@ from apps.authentication.models import User
 
 class EmailSignupView(CreateAPIView):
     serializer_class = serializers.EmailSignUpSerializer
+    permission_classes = ()
 
 
 class EmailLoginView(CreateAPIView):
     serializer_class = serializers.EmailLoginSerializer
+    permission_classes = ()
 
 
 class UserViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):

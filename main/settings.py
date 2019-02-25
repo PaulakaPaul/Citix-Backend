@@ -89,8 +89,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Random django consts
+
 ROOT_URLCONF = 'main.urls'
 AUTH_USER_MODEL = 'authentication.User'
+
+WSGI_APPLICATION = 'main.wsgi.application'
+
+SITE_ID = 1
+
+# Templates
 
 TEMPLATES = [
     {
@@ -107,8 +115,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'main.wsgi.application'
 
 
 # Database
@@ -156,9 +162,9 @@ if ENV_VARS['ENABLE_FIREBASE']:
 # Rest config
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'apps.authentication.backends.CloudTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
