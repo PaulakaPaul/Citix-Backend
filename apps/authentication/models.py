@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from phonenumber_field import modelfields
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 
@@ -17,7 +18,7 @@ class CloudGeneratedToken(Token):
 
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
-    phone = models.CharField(_('phone_number'), max_length=255, blank=True, null=True)
+    phone = modelfields.PhoneNumberField(_('phone_number'), max_length=255, blank=True, null=True)
 
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(

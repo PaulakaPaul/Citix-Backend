@@ -72,10 +72,13 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'email', )
 
     def validate_rating(self, value):
+        if value is not None and len(value) == 0:
+            raise serializers.ValidationError(_('Empty rating object not supported.'))
+
         if value:
             star_rating = value.get('star_rating', None)
             if star_rating and star_rating > 5.0:
-                raise serializers.ValidationError(_('Star rating max value is 5.0'))
+                raise serializers.ValidationError(_('Star rating max value is 5.0.'))
 
         return value
 
@@ -88,11 +91,11 @@ class UserSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             user.save()
 
-            if addresses_data is not None:
+            if addresses_data:
                 for address_data in addresses_data:
                     self._create_address(user, address_data)
 
-            if star_rating_data is not None:
+            if star_rating_data:
                 self._create_star_rating(user, star_rating_data)
 
         return user
@@ -107,11 +110,11 @@ class UserSerializer(serializers.ModelSerializer):
 
             instance.save()
 
-            if addresses_data is not None:
+            if addresses_data:
                 for address_data in addresses_data:
                     self._create_address(instance, address_data)
 
-            if star_rating_data is not None:
+            if star_rating_data:
                 instance.rating.delete()
                 self._create_star_rating(instance, star_rating_data)
 
