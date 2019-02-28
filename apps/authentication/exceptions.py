@@ -29,13 +29,3 @@ class WrongEmailOrPasswordError(FieldError):
 
     def __init__(self):
         super().__init__('credentials')
-
-
-class UserExceptions:
-    class UserNotFound(FieldError):
-        message = _('User could not be found')
-        code = 'user_not_found'
-
-        def __init__(self):
-            super().__init__('user')
-

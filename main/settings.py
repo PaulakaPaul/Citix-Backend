@@ -25,6 +25,12 @@ class EnvVarsValidator(Schema):
     FIREBASE_DATABASE_URL = fields.String(missing=None)
     FIREBASE_STORAGE_BUCKET = fields.String(missing=None)
 
+    DATABASE_HOST = fields.String(missing='127.0.0.1')
+    DATABASE_PORT = fields.String(missing='5432')
+    DATABASE_USER = fields.String(missing='postgres')
+    DATABASE_PASSWORD = fields.String(missing='some-pass')
+    DATABASE_NAME = fields.String(missing='citix')
+
     @validates_schema
     def validate_data(self, data):
         missing_fields = []
@@ -68,7 +74,8 @@ CONTRIB_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'apps.authentication'
+    'apps.authentication',
+    'apps.events'
 ]
 
 INSTALLED_APPS = CORE_APPS + CONTRIB_APPS + CUSTOM_APPS
@@ -83,8 +90,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Random django consts
+
 ROOT_URLCONF = 'main.urls'
 AUTH_USER_MODEL = 'authentication.User'
+
+WSGI_APPLICATION = 'main.wsgi.application'
+
+SITE_ID = 1
+
+# Templates
 
 TEMPLATES = [
     {
@@ -102,16 +117,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'main.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': ENV_VARS['DATABASE_NAME'],
+        'USER': ENV_VARS['DATABASE_USER'],
+        'PASSWORD': ENV_VARS['DATABASE_PASSWORD'],
+        'HOST': ENV_VARS['DATABASE_HOST'],
+        'PORT': ENV_VARS['DATABASE_PORT']
     }
 }
 
@@ -146,16 +163,19 @@ if ENV_VARS['ENABLE_FIREBASE']:
 # Rest config
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'apps.authentication.backends.CloudTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    'EXCEPTION_HANDLER': 'apps.common.handlers.code_and_message_exception_handler',
+    'DEFAULT_PAGINATION_CLASS': 'apps.common.pagination.DefaultPagination',
     'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%SZ'
 }
 
+DEFAULT_PAGE_SIZE = 25
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

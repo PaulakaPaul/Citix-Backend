@@ -7,27 +7,14 @@ from apps.authentication.models import *
 
 class EmailSignupView(CreateAPIView):
     serializer_class = serializers.EmailSignUpSerializer
+    permission_classes = ()
 
 
 class EmailLoginView(CreateAPIView):
     serializer_class = serializers.EmailLoginSerializer
+    permission_classes = ()
 
 
 class UserViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
-    serializer_class = serializers.BaseUserSerializer
+    serializer_class = serializers.UserSerializer
     queryset = User.objects.all()
-
-
-class UserAddressView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
-    serializer_class = serializers.UserAddressSerializer
-    queryset = UserAddress.objects.all()
-
-
-class UserRatingView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
-    serializer_class = serializers.UserRatingSerializer
-    queryset = UserRating.objects.all()
-
-
-class UserEventView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
-    serializer_class = serializers.UserEventSerializer
-    queryset = BaseUserEvent.objects.all()
