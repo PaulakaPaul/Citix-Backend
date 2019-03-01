@@ -1,6 +1,8 @@
-from django.contrib.auth.models import AbstractUser, UserManager as DefaultUserManager
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from phonenumber_field import modelfields
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 
@@ -16,7 +18,7 @@ class CloudGeneratedToken(Token):
 
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
-    phone = models.CharField(_('phone_number'), max_length=255, blank=True, null=True)
+    phone = modelfields.PhoneNumberField(_('phone_number'), max_length=255, blank=True, null=True)
 
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(
@@ -33,3 +35,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class UserAddress(models.Model):
+    country = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    neighbourhood = models.CharField(max_length=50)
+    street = models.CharField(max_length=50, blank=True, null=True)
+    number = models.IntegerField(blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='addresses')
+
+
+class UserRating(models.Model):
+    star_rating = models.FloatField()
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rating')

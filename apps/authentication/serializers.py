@@ -1,6 +1,10 @@
+from django.db import transaction
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
+
 from apps.authentication.clouds import BaseAuthSerializer
-from apps.authentication.models import User, CloudGeneratedToken
+from apps.authentication.models import *
+import apps.authentication.models as models
 import apps.authentication.exceptions as exceptions
 
 
@@ -43,24 +47,85 @@ class EmailLoginSerializer(BaseAuthSerializer):
         return CloudGeneratedToken.objects.create(key=token, refresh_key=refresh_token, user=django_user)
 
 
-class UserSerializer(serializers.Serializer):
-    first_name = serializers.CharField(max_length=30)
-    last_name = serializers.CharField(max_length=150)
-    phone = serializers.CharField(max_length=255)
-    email = serializers.EmailField()
+class UserAddressSerializer(serializers.ModelSerializer):
 
-    def save(self, validated_data):
-        return User(self.first_name, self.last_name, self.email, self.phone).save()
+    class Meta:
+        model = models.UserAddress
+        fields = ('country', 'city', 'neighbourhood', 'street', 'number')
+
+
+class UserRatingSerializer(serializers.ModelSerializer):
+    star_rating = serializers.FloatField(required=True)
+
+    class Meta:
+        model = models.UserRating
+        fields = ('star_rating', )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    addresses = UserAddressSerializer(many=True, required=False)
+    rating = UserRatingSerializer(many=False, required=False)
+
+    class Meta:
+        model = models.User
+        fields = ('id', 'first_name', 'last_name', 'phone', 'email', 'addresses', 'rating')
+        read_only_fields = ('id', 'email', )
+
+    def validate_rating(self, value):
+        if value is not None and len(value) == 0:
+            raise serializers.ValidationError(_('Empty rating object not supported.'))
+
+        if value:
+            star_rating = value.get('star_rating', None)
+            if star_rating and star_rating > 5.0:
+                raise serializers.ValidationError(_('Star rating max value is 5.0.'))
+
+        return value
+
+    def create(self, validated_data):
+        addresses_data = validated_data.pop('addresses', None)
+        star_rating_data = validated_data.pop('star_rating', None)
+
+        user = User.objects.create(**validated_data)
+
+        with transaction.atomic():
+            user.save()
+
+            if addresses_data:
+                for address_data in addresses_data:
+                    self._create_address(user, address_data)
+
+            if star_rating_data:
+                self._create_star_rating(user, star_rating_data)
+
+        return user
 
     def update(self, instance, validated_data):
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.first_name)
-        instance.phone = validated_data.get('phone', instance.phone)
-        instance.email = validated_data.get('email', instance.email)
-        return User(instance.first_name, instance.last_name, instance.email, instance.phone).save()
+        addresses_data = validated_data.pop('addresses', None)
+        star_rating_data = validated_data.pop('rating', None)
 
-    def get(self):
-        super().get_fields()
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-    def delete(self):
-        super().delete(self)
+            instance.save()
+
+            if addresses_data:
+                for address_data in addresses_data:
+                    self._create_address(instance, address_data)
+
+            if star_rating_data:
+                instance.rating.delete()
+                self._create_star_rating(instance, star_rating_data)
+
+        return instance
+
+    def _create_address(self, user, address_data):
+        address_serializer = UserAddressSerializer(data=address_data)
+        if address_serializer.is_valid(raise_exception=True):
+            address_serializer.save(user=user)
+
+    def _create_star_rating(self, user, star_rating_data):
+        star_rating_serializer = UserRatingSerializer(data=star_rating_data)
+        if star_rating_serializer.is_valid(raise_exception=True):
+            star_rating_serializer.save(user=user)

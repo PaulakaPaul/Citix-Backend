@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^auth/email/signup/$', views.EmailSignupView.as_view(), name='email-signup'),
     url(r'^auth/email/login/$', views.EmailLoginView.as_view(), name='email-login'),
 
-    url(r'^', include(router_user.urls))
+    url(r'^', include(router_user.urls)),
 ]

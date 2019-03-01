@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.conf import settings
 from requests import HTTPError
@@ -49,6 +50,9 @@ class BaseAuthSerializer(Serializer):
         user = self.create_or_get_django_user_from_cloud_user(cloud_user)
         self._test_if_valid_model(user)
 
+        user.last_login = datetime.utcnow()
+        user.save()
+
         token = self.create_and_get_cloud_token(cloud_user, user)
         self._test_if_valid_token(token)
 
@@ -69,3 +73,7 @@ class BaseAuthSerializer(Serializer):
 
     def create_or_get_django_user_from_cloud_user(self, user):
         raise NotImplementedError()
+
+
+
+

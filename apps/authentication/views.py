@@ -1,9 +1,8 @@
 from rest_framework import mixins
 from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import GenericViewSet
-
 import apps.authentication.serializers as serializers
-from apps.authentication.models import User
+from apps.authentication.models import *
 
 
 class EmailSignupView(CreateAPIView):
