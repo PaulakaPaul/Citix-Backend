@@ -73,7 +73,3 @@ class BaseAuthSerializer(Serializer):
 
     def create_or_get_django_user_from_cloud_user(self, user):
         raise NotImplementedError()
-
-
-
-
