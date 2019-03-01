@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-import pyrebase
 from dotenv import load_dotenv
 from marshmallow import Schema, fields, validates_schema
 
@@ -10,7 +9,6 @@ PROJECT_DIR = os.path.dirname(BASE_DIR)
 
 env_path = Path('./main') / '.env'
 load_dotenv(env_path)
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'a!x5k473)exg!d@mb0gs^81!u9p*ub2l-u&4hq%02e%!!g546r'
@@ -117,7 +115,6 @@ TEMPLATES = [
     },
 ]
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -131,7 +128,6 @@ DATABASES = {
         'PORT': ENV_VARS['DATABASE_PORT']
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -158,7 +154,6 @@ if ENV_VARS['ENABLE_FIREBASE']:
     FIREBASE_AUTH_DOMAIN = ENV_VARS['FIREBASE_AUTH_DOMAIN']
     FIREBASE_DATABASE_URL = ENV_VARS['FIREBASE_DATABASE_URL']
     FIREBASE_STORAGE_BUCKET = ENV_VARS['FIREBASE_STORAGE_BUCKET']
-
 
 # Rest config
 
@@ -189,7 +184,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
