@@ -4,9 +4,10 @@ from rest_framework.routers import DefaultRouter
 
 from apps.events import views
 
-router_user = DefaultRouter()
-router_user.register(r'events', views.EventViewSet, 'event')
+router_events = DefaultRouter()
+router_events.register(r'events', views.EventViewSet, 'event')
 
 urlpatterns = [
-    url(r'^', include(router_user.urls)),
+    url(r'^', include(router_events.urls)),
+    url(r'^events/reactions/$', views.EventUserReactionViewSet.as_view({'post': 'create'})),
 ]

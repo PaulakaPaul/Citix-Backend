@@ -12,3 +12,7 @@ class EventViewSet(mixins.ListModelMixin,
                    GenericViewSet):
     serializer_class = serializers.EventSerializer
     queryset = Event.objects.all()
+
+
+class EventUserReactionViewSet(mixins.CreateModelMixin, GenericViewSet):
+    serializer_class = serializers.EventUserReactionSerializer

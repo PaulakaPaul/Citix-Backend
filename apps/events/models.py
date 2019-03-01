@@ -11,6 +11,12 @@ class Event(models.Model):
     photo_urls = ArrayField(models.URLField())
 
 
-class UserEvent(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='users')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events')
+class EventUserReaction(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='user_reactions')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='event_reactions')
+
+    interested = models.BooleanField(default=False)
+    going = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('event', 'user')
