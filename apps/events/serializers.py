@@ -26,18 +26,6 @@ class EventUserReactionSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validated_data):
-        user_id = validated_data.get('user_id')
-        event_id = validated_data.get('event_id')
-
-        try:
-            event_user_reaction = models.EventUserReaction.objects.get(user_id=user_id, event_id=event_id)
-            event_user_reaction.delete()
-        except models.EventUserReaction.DoesNotExist:
-            pass
-
-        return super().create(validated_data)
-
 
 class EventSerializer(serializers.ModelSerializer):
     user_reactions = EventUserReactionSerializer(many=True, required=False)
