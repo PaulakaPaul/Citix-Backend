@@ -1,6 +1,7 @@
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
+from apps.common.base_views import BaseAddPhotoView
 from apps.events import serializers
 from apps.events.models import Event, EventUserReaction
 
@@ -28,3 +29,7 @@ class EventUserReactionViewSet(mixins.CreateModelMixin, GenericViewSet):
             pass
 
         return super().create(request, *args, **kwargs)
+
+
+class EventAddPhotoView(BaseAddPhotoView):
+    model = Event

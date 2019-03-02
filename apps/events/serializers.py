@@ -33,3 +33,4 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
         fields = ('name', 'description', 'location', 'photo_urls', 'user_reactions')
+        read_only_fields = ('photo_urls', )

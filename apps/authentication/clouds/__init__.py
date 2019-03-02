@@ -7,16 +7,22 @@ from rest_framework import fields
 from rest_framework.serializers import Serializer
 from django.apps import apps
 
-from apps.authentication.clouds.firebase import FirebaseAuthClient
+from apps.authentication.clouds.firebase import FirebaseAuthClient, FirebaseBucketClient
 from apps.authentication.models import CloudGeneratedToken
 
 logger = logging.getLogger(__name__)
 
 auth_cloud_client = FirebaseAuthClient()
 
+bucket_cloud_client = FirebaseBucketClient()
+
 
 def get_auth_cloud_client():
     return auth_cloud_client
+
+
+def get_bucket_cloud_client():
+    return bucket_cloud_client
 
 
 class BaseAuthSerializer(Serializer):
