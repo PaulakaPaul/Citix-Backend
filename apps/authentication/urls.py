@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^auth/email/signup/$', views.EmailSignupView.as_view(), name='email-signup'),
     url(r'^auth/email/login/$', views.EmailLoginView.as_view(), name='email-login'),
 
+    url(r'^users/photo/$', views.UserAddPhotoView.as_view(), name='user-add-photo'),
+
     url(r'^', include(router_user.urls)),
 ]

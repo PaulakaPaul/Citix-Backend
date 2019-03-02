@@ -8,7 +8,7 @@ class Event(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=4096)
     location = PointField()
-    photo_urls = ArrayField(models.URLField(max_length=2048))
+    photo_urls = ArrayField(models.URLField(max_length=2048), default=list)
 
 
 class EventUserReaction(models.Model):
