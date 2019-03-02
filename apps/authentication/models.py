@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from phonenumber_field import modelfields
 from rest_framework.authtoken.models import Token
@@ -29,6 +30,8 @@ class User(AbstractUser):
         blank=True,
         null=True
     )
+
+    photo_urls = ArrayField(models.URLField(max_length=2048), default=list)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

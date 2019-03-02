@@ -68,8 +68,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ('id', 'first_name', 'last_name', 'phone', 'email', 'addresses', 'rating')
-        read_only_fields = ('id', 'email', )
+        fields = ('id', 'first_name', 'last_name', 'phone', 'email', 'addresses', 'rating', 'photo_urls')
+        read_only_fields = ('id', 'email', 'photo_urls')
 
     def validate_rating(self, value):
         if value is not None and len(value) == 0:

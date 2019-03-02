@@ -18,4 +18,4 @@ django-phonenumber-field = "==2.2.0"
 phonenumbers = "==8.10.6"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
