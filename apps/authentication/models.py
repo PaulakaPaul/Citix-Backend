@@ -46,9 +46,19 @@ class UserAddress(models.Model):
     neighbourhood = models.CharField(max_length=50)
     street = models.CharField(max_length=50, blank=True, null=True)
     number = models.IntegerField(blank=True, null=True)
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='addresses')
+
+    def __str__(self):
+        return self.country + " " + self.city + " " + self.neighbourhood
 
 
 class UserRating(models.Model):
     star_rating = models.FloatField()
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rating')
+
+    MAX_STAR_RATING = 5.0
+
+    def __str__(self):
+        return '{} out of {}'.format(self.star_rating, self.MAX_STAR_RATING)
