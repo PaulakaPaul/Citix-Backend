@@ -64,11 +64,12 @@ CORE_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.gis'
 ]
 
 CONTRIB_APPS = [
     'rest_framework_swagger',
-    'rest_framework'
+    'rest_framework',
 ]
 
 CUSTOM_APPS = [

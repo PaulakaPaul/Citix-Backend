@@ -10,6 +10,9 @@ class Event(models.Model):
     location = PointField()
     photo_urls = ArrayField(models.URLField(max_length=2048), default=list)
 
+    def __str__(self):
+        return '{}: {}'.format(self.id, self.name)
+
 
 class EventUserReaction(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='user_reactions')
@@ -18,5 +21,15 @@ class EventUserReaction(models.Model):
     interested = models.BooleanField(default=False)
     going = models.BooleanField(default=False)
 
+    REACTIONS = ('interested', 'going', )
+
     class Meta:
         unique_together = ('event', 'user')
+
+    def __str__(self):
+        boolean_reactions = map(lambda reaction: getattr(self, reaction), self.REACTIONS)
+
+        activated_reaction_index = list(boolean_reactions).index(True)
+        activated_reaction = self.REACTIONS[activated_reaction_index]
+
+        return activated_reaction.upper()

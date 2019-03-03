@@ -61,6 +61,15 @@ class UserRatingSerializer(serializers.ModelSerializer):
         model = models.UserRating
         fields = ('star_rating', )
 
+    def validate(self, attrs):
+        star_rating = attrs.get('star_rating', None)
+        max_star_rating = self.Meta.model.MAX_STAR_RATING
+
+        if star_rating and star_rating > max_star_rating:
+            raise serializers.ValidationError(_('Star rating max value is {}.'.format(max_star_rating)))
+
+        return attrs
+
 
 class UserSerializer(serializers.ModelSerializer):
     addresses = UserAddressSerializer(many=True, required=False)
@@ -72,19 +81,18 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'email', 'photo_urls')
 
     def validate_rating(self, value):
-        if value is not None and len(value) == 0:
-            raise serializers.ValidationError(_('Empty rating object not supported.'))
+        # This validation is needed because the rating objects
+        # it's deleted before the UserRatingSerializer 'required=True' checks.
+        has_star_rating_field = value.get('star_rating', None) is not None
 
-        if value:
-            star_rating = value.get('star_rating', None)
-            if star_rating and star_rating > 5.0:
-                raise serializers.ValidationError(_('Star rating max value is 5.0.'))
+        if has_star_rating_field is False:
+            raise serializers.ValidationError(_('rating__star_rating field it\'s required.'))
 
         return value
 
     def create(self, validated_data):
         addresses_data = validated_data.pop('addresses', None)
-        star_rating_data = validated_data.pop('star_rating', None)
+        star_rating_data = validated_data.pop('rating', None)
 
         user = User.objects.create(**validated_data)
 
