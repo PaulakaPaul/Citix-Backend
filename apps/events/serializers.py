@@ -1,3 +1,4 @@
+from django.contrib.gis.geos import Point
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
@@ -29,8 +30,19 @@ class EventUserReactionSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     user_reactions = EventUserReactionSerializer(many=True, required=False)
+    lat = serializers.FloatField(required=True, source='location.x')
+    lng = serializers.FloatField(required=True, source='location.y')
 
     class Meta:
         model = models.Event
-        fields = ('name', 'description', 'location', 'photo_urls', 'user_reactions')
-        read_only_fields = ('photo_urls', )
+        fields = ('name', 'description', 'lat', 'lng', 'photo_urls', 'user_reactions')
+        read_only_fields = ('photo_urls', 'user_reactions')
+
+    def create(self, validated_data):
+        lat = validated_data['location']['x']
+        lng = validated_data['location']['y']
+
+        point = Point(lat, lng)
+        validated_data['location'] = point
+
+        return super().create(validated_data)

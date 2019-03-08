@@ -25,6 +25,8 @@ class BaseAddPhotoView(APIView):
         if object_id is None:
             raise ValidationError(_('{} is required.'.format(object_id_name)))
 
+        object_id = int(object_id)
+
         try:
             obj = self.model.objects.get(id=object_id)
         except self.model.DoesNotExist:
