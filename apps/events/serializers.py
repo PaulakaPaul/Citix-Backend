@@ -35,8 +35,8 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Event
-        fields = ('name', 'description', 'lat', 'lng', 'photo_urls', 'user_reactions')
-        read_only_fields = ('photo_urls', 'user_reactions')
+        fields = ('id', 'name', 'description', 'lat', 'lng', 'photo_urls', 'user_reactions')
+        read_only_fields = ('id', 'photo_urls', 'user_reactions')
 
     def create(self, validated_data):
         lat = validated_data['location']['x']

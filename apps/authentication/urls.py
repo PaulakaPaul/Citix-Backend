@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^auth/email/login/$', views.EmailLoginView.as_view(), name='email-login'),
 
     url(r'^users/photo/$', views.UserAddPhotoView.as_view(), name='user-add-photo'),
+    url(r'^users/me/$', views.CurrentUserView.as_view(), name='user-me'),
 
     url(r'^', include(router_user.urls)),
 ]
