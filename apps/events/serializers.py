@@ -42,7 +42,7 @@ class EventSerializer(serializers.ModelSerializer):
         lat = validated_data['location']['x']
         lng = validated_data['location']['y']
 
-        point = Point(lat, lng)
+        point = Point(lng, lat)
         validated_data['location'] = point
 
         return super().create(validated_data)
