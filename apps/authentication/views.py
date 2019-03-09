@@ -1,5 +1,5 @@
 from rest_framework import mixins
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import GenericViewSet
 import apps.authentication.serializers as serializers
 from apps.authentication.models import *
@@ -19,6 +19,13 @@ class EmailLoginView(CreateAPIView):
 class UserViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     serializer_class = serializers.UserSerializer
     queryset = User.objects.all()
+
+
+class CurrentUserView(RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.UserSerializer
+
+    def get_object(self):
+        return self.request.user
 
 
 class UserAddPhotoView(BaseAddPhotoView):
